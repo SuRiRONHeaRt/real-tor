@@ -1,7 +1,23 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import {
+  User,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { db, auth } from "../firebaseConfig";
+import { FieldValue, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+interface FormData {
+  name: string;
+  email: string;
+  password?: string;
+  timestamp?: FieldValue;
+}
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -11,8 +27,41 @@ const SignUp = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-
+  //? Object Descruturing
   const { name, email, password } = formData;
+
+  //*Initialize navigate
+  const navigate = useNavigate();
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      updateProfile(auth.currentUser as User, {
+        displayName: name,
+      });
+      //* creating a user
+      const user = userCredential.user;
+      //*make a copy of formData
+      const formDataCopy: FormData = { ...formData };
+      //*delete the password
+      delete formDataCopy?.password;
+      //*make a timestamp
+      formDataCopy.timestamp = serverTimestamp();
+      //*feed suer data to userss=>under current user=>formDataCopy
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
+      navigate("/");
+      toast.success("Signed up successfully");
+      // console.log(user);
+    } catch (error) {
+      toast.error("Something went wrong with registration");
+    }
+  };
 
   return (
     <section>
@@ -26,7 +75,7 @@ const SignUp = () => {
           />
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form>
+          <form onSubmit={onSubmit}>
             <input
               className="mb-6 w-full px-4 py-2 text-xl text-gray-700
                bg-white border-gray-300 rounded trasi ease-in-out"
@@ -34,7 +83,7 @@ const SignUp = () => {
               id="name"
               value={name}
               onChange={(event) =>
-                setFormData({ ...formData, email: event.target.value })
+                setFormData({ ...formData, name: event.target.value })
               }
               placeholder="Full Name"
             />
