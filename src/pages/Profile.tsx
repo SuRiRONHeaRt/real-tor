@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { db, auth } from "../firebaseConfig";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { User, updateProfile } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
 
 interface UserData {
   name: string;
@@ -9,6 +12,8 @@ interface UserData {
 
 const Profile = () => {
   const navigate = useNavigate();
+
+  const [toggleEdit, setToggleEdit] = useState(false);
 
   const [formData, setFormData] = useState({
     name: auth.currentUser?.displayName,
@@ -20,6 +25,30 @@ const Profile = () => {
   const onLogout = () => {
     auth.signOut();
     navigate("/");
+  };
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const onSubmit = async () => {
+    try {
+      //*update the display name in firebase authentication
+      if (auth.currentUser?.displayName !== name) {
+        await updateProfile(auth.currentUser as User, {
+          displayName: name,
+        });
+        //* update the name in the firestore database
+        const user = auth.currentUser as User;
+        const docRef = doc(db, "users", user.uid);
+        await updateDoc(docRef, {
+          name: name,
+        });
+      }
+      toast.success("Profile updated");
+    } catch (error) {
+      toast.error("Could not update profile");
+    }
   };
 
   return (
@@ -38,13 +67,16 @@ const Profile = () => {
           <form>
             {/* name input */}
             <input
-              className="w-full px-4 py-2 text-xl text-gray-700
+              className={`w-full px-4 py-2 text-xl text-gray-700
               bg-white border border-gray-300 rounded
-              transition duration-300 ease-in-out mb-6"
+              transition duration-300 ease-in-out mb-6 ${
+                toggleEdit && "bg-red-200 focus:bg-red-200"
+              }`}
               type="text"
               id="name"
               value={name}
-              disabled
+              disabled={!toggleEdit}
+              onChange={onChange}
             />
             {/* Email Input */}
             <input
@@ -63,11 +95,15 @@ const Profile = () => {
               <p className="flex items-center">
                 Do you want to change your name?
                 <span
+                  onClick={() => {
+                    toggleEdit && onSubmit();
+                    setToggleEdit(!toggleEdit);
+                  }}
                   className="text-red-600 
                 hover:text-red-700 transition duration-200
                 ease-in-out ml-1 cursor-pointer"
                 >
-                  Edit
+                  {toggleEdit ? "Apply Change" : "Edit"}
                 </span>
               </p>
               <p
