@@ -1,8 +1,24 @@
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { db, auth } from "../firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  //*toggle sign in option in header to profile
+  const [toggleToProfile, setToggleToProfile] = useState("Sign In");
+
+  //*toggle dynamic sign in to profile text and vise versa
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setToggleToProfile("Profile");
+      } else {
+        setToggleToProfile("Sign In");
+      }
+    });
+  }, [auth]);
 
   const pathMatchRoute = (route: string) => {
     return route === location.pathname ? true : false;
@@ -42,11 +58,12 @@ const Header = () => {
             <li
               className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] 
               border-b-transparent ${
-                pathMatchRoute("/sign-in") && "text-gray-900 border-b-red-600"
+                pathMatchRoute("/sign-in") ||
+                (pathMatchRoute("/profile") && "text-gray-900 border-b-red-600")
               }`}
-              onClick={() => navigate("/sign-in")}
+              onClick={() => navigate("/profile")}
             >
-              Sign In
+              {toggleToProfile}
             </li>
           </ul>
         </div>

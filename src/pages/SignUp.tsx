@@ -53,7 +53,7 @@ const SignUp = () => {
       delete formDataCopy?.password;
       //*make a timestamp
       formDataCopy.timestamp = serverTimestamp();
-      //*feed suer data to userss=>under current user=>formDataCopy
+      //*feed user data to userss=>under current user=>formDataCopy
       await setDoc(doc(db, "users", user.uid), formDataCopy);
       navigate("/");
       toast.success("Signed up successfully");

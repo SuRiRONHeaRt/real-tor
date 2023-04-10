@@ -44,8 +44,10 @@ const Profile = () => {
         await updateDoc(docRef, {
           name: name,
         });
+        toast.success("Profile updated");
+      } else {
+        toast.info("No Changes Made");
       }
-      toast.success("Profile updated");
     } catch (error) {
       toast.error("Could not update profile");
     }
@@ -70,7 +72,7 @@ const Profile = () => {
               className={`w-full px-4 py-2 text-xl text-gray-700
               bg-white border border-gray-300 rounded
               transition duration-300 ease-in-out mb-6 ${
-                toggleEdit && "bg-red-200 focus:bg-red-200"
+                toggleEdit && "bg-red-300 focus:bg-red-400"
               }`}
               type="text"
               id="name"
