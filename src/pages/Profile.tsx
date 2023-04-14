@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { User, updateProfile } from "firebase/auth";
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   orderBy,
@@ -87,6 +88,20 @@ const Profile = () => {
     };
     fetchUserListings();
   }, [auth.currentUser?.uid]);
+
+  const onDelete = async (id: any) => {
+    if (window.confirm("Are you sure you want to delete this listing?")) {
+      await deleteDoc(doc(db, "listings", id));
+      const updatedListings = listings.filter(
+        (listing: any) => listing.id !== id
+      );
+      setListings(updatedListings);
+      toast.success("Listing deleted");
+    }
+  };
+  const onEdit = (id: any) => {
+    navigate(`/edit-listing/${id}`);
+  };
 
   return (
     <>
@@ -188,6 +203,8 @@ const Profile = () => {
                   key={listing.id}
                   id={listing.id}
                   listing={listing.data}
+                  onDelete={() => onDelete(listing.id)}
+                  onEdit={() => onEdit(listing.id)}
                 />
               ))}
             </ul>
