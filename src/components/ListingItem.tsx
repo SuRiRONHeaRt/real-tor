@@ -8,8 +8,8 @@ import { MdEdit } from "react-icons/md";
 interface Props {
   id: number;
   listing: any;
-  onDelete: any;
-  onEdit: any;
+  onDelete?: any;
+  onEdit?: any;
 }
 
 const ListingItem = ({ id, listing, onEdit, onDelete }: Props) => {
