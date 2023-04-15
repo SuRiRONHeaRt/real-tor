@@ -102,7 +102,7 @@ const Listing = () => {
             className="text-2xl font-bold mb-3 text-blue-900
           "
           >
-            {listing.name} - $
+            {listing.name} - Rs. &nbsp;
             {listing.offer
               ? listing.discountedPrice
                   .toString()
@@ -134,7 +134,7 @@ const Listing = () => {
                 rounded-md p-1 text-white text-center font-semibold
                 shadow-md"
               >
-                ${+listing.regularPrice - +listing.discountedPrice} Discount
+                Rs. {+listing.regularPrice - +listing.discountedPrice} Discount
               </p>
             )}
           </div>

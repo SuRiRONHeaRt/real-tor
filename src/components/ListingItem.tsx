@@ -48,7 +48,7 @@ const ListingItem = ({ id, listing, onEdit, onDelete }: Props) => {
           </div>
           <p className="font-semibold m-0 text-xl truncate">{listing.name}</p>
           <p className="text-[#457b9d] mt-2 font-semibold">
-            $
+            Rs.&nbsp;
             {listing.offer
               ? listing.discountedPrice
                   .toString()

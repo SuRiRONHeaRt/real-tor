@@ -492,7 +492,7 @@ const CreateListing = () => {
                 value={regularPrice}
                 onChange={onChange}
                 min={50}
-                max={4_000_000}
+                max={1_000_000_000}
                 required
                 className="w-full px-4 py-2 text-xl 
                 text-gray-700 bg-white border 
@@ -507,7 +507,7 @@ const CreateListing = () => {
                     className="text-md w-full
                     whitespace-nowrap"
                   >
-                    $/ Month
+                    Rs. / Month
                   </p>
                 </div>
               )}
@@ -528,7 +528,7 @@ const CreateListing = () => {
                   value={discountedPrice}
                   onChange={onChange}
                   min={50}
-                  max={4_000_000}
+                  max={1_000_000_000}
                   required={offer}
                   className="w-full px-4 py-2 text-xl 
                   text-gray-700 bg-white border 
@@ -543,7 +543,7 @@ const CreateListing = () => {
                       className="text-md w-full
                       whitespace-nowrap"
                     >
-                      $/ Month
+                      Rs. / Month
                     </p>
                   </div>
                 )}

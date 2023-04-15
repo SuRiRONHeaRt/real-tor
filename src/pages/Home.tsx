@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Slider from "../components/Slider";
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import { db } from "../firebaseConfig";
+import Spinner from "../components/Spinner";
 
 const Home = () => {
-  return <div>Home</div>;
+  return (
+    <div>
+      <Slider />
+    </div>
+  );
 };
 
 export default Home;
