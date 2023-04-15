@@ -38,28 +38,28 @@ const Header = () => {
         <div>
           <ul className="flex space-x-10">
             <li
-              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] 
+              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[5px] 
               border-b-transparent ${
-                pathMatchRoute("/") && "text-gray-900 border-b-red-600"
+                pathMatchRoute("/") && "text-gray-800 border-b-red-500"
               }`}
               onClick={() => navigate("/")}
             >
               Home
             </li>
             <li
-              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] 
+              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[5px] 
               border-b-transparent ${
-                pathMatchRoute("/offers") && "text-gray-900 border-b-red-600"
+                pathMatchRoute("/offers") && "text-gray-800 border-b-red-500"
               }`}
               onClick={() => navigate("/offers")}
             >
               Offers
             </li>
             <li
-              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] 
+              className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[5px] 
               border-b-transparent ${
                 pathMatchRoute("/sign-in") ||
-                (pathMatchRoute("/profile") && "text-gray-900 border-b-red-600")
+                (pathMatchRoute("/profile") && "text-gray-800 border-b-red-500")
               }`}
               onClick={() => navigate("/profile")}
             >
