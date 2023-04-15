@@ -13,11 +13,13 @@ import { toast } from "react-toastify";
 import { db } from "../firebaseConfig";
 import Spinner from "../components/Spinner";
 import ListingItem from "../components/ListingItem";
+import { useParams } from "react-router";
 
-const Offers = () => {
+const Category = () => {
   const [offers, setOffers] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [lastFetchedListing, setLastFetchedListing] = useState<any>(null);
+  const params: any = useParams();
 
   useEffect(() => {
     const fetchOffers = async () => {
@@ -25,7 +27,7 @@ const Offers = () => {
         const listingRef = collection(db, "listings");
         const q = query(
           listingRef,
-          where("offer", "==", true),
+          where("type", "==", params.categoryName),
           orderBy("timestamp", "desc"),
           limit(4)
         );
@@ -46,14 +48,14 @@ const Offers = () => {
       }
     };
     fetchOffers();
-  }, []);
+  }, [params.categoryName]);
 
   const onFetchMoreListing = async () => {
     try {
       const listingRef = collection(db, "listings");
       const q = query(
         listingRef,
-        where("offer", "==", true),
+        where("type", "==", params.categoryName),
         orderBy("timestamp", "desc"),
         startAfter(lastFetchedListing),
         limit(4)
@@ -77,7 +79,11 @@ const Offers = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-3">
-      <h1 className="text-3xl text-center mt-6 font-bold mb-6">Offers</h1>
+      <h1 className="text-3xl text-center mt-6 font-bold mb-6">
+        {params.categoryName === "rent"
+          ? "Places For Rent"
+          : "Places For Sales"}
+      </h1>
       {loading ? (
         <Spinner />
       ) : offers && offers.length > 0 ? (
@@ -85,7 +91,7 @@ const Offers = () => {
           <main>
             <ul
               className="sm:grid sm:grid-cols-2 lg:grid-cols-3
-            xl:grid-cols-4 2xl:grid-cols-4"
+              xl:grid-cols-4 2xl:grid-cols-4"
             >
               {offers.map((offer: any) => (
                 <ListingItem
@@ -100,8 +106,8 @@ const Offers = () => {
             <div className="flex justify-center items-center">
               <button
                 className="bg-white px-3 py-1.5 text-gray-700
-              border border-gray-300 mb-6 mt-6 hover:border-slate-600
-              rounded transition duration-150 ease-in-out"
+                border border-gray-300 mb-6 mt-6 hover:border-slate-600
+                rounded transition duration-150 ease-in-out"
                 onClick={onFetchMoreListing}
               >
                 Load More
@@ -116,4 +122,4 @@ const Offers = () => {
   );
 };
 
-export default Offers;
+export default Category;
